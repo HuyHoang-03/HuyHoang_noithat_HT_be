@@ -17,7 +17,7 @@ public class ImageEntity {
     Integer imgId;
     String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "product_id")
     ProductEntity product;
 }

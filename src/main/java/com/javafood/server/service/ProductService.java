@@ -25,11 +25,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -290,6 +292,7 @@ public class ProductService {
     }
 
     @PreAuthorize(adminRole)
+    @Transactional
     public void deleteProduct(Integer productId) {
         boolean isExist = productRepository.existsByProductId(productId);
         if(!isExist) throw new AppException(ErrorCode.NOT_EXISTS_DATA);
@@ -363,4 +366,27 @@ public class ProductService {
         }
     }
 
+
+    public Page<ProductResponse> searchProduct(int pageNo, int pageSize, String sortBy, String sortDir,String productName) {
+        if (productName == null || productName.trim().isEmpty()) {
+            throw new RuntimeException("Tên sản phẩm không được để trống ");
+        }
+
+        // Tạo Sort object
+        Sort sort = sortDir.equalsIgnoreCase("desc") ?
+                Sort.by(sortBy).descending() :
+                Sort.by(sortBy).ascending();
+
+        // Tạo Pageable
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        Page<ProductEntity> listProduct = productRepository.searchProduct(pageable, productName);
+
+        if (listProduct.isEmpty()) {
+            throw new AppException(ErrorCode.NOT_EXISTS_DATA);
+        }
+
+
+        return listProduct.map(productMapper::toProductResponse);
+    }
 }

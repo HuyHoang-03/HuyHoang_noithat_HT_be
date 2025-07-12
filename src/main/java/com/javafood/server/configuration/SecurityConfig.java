@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private String[] public_endpoints = {"/users", "/auth/introspect",
             "/auth/login", "/auth/logout", "/users/register"};
-    private String[] public_endpoints_get = {"/products/feature-product/pagination/**","/categories", "/products/category/{categoryId}", "/products/{productId}" };
+    private String[] public_endpoints_get = {"/products/feature-product/pagination/**","/categories", "/products/category/{categoryId}", "/products/{productId}", "/products/search/**" };
 
     @Autowired
     private CustomeJwtDecoder customeJwtDecoder;
