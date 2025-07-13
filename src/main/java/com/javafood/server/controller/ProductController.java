@@ -3,6 +3,7 @@ package com.javafood.server.controller;
 import com.javafood.server.dto.request.ProductRequest;
 import com.javafood.server.dto.response.ApiResponse;
 import com.javafood.server.dto.response.ProductResponse;
+import com.javafood.server.exception.AppException;
 import com.javafood.server.service.ProductService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -166,5 +167,33 @@ public class ProductController {
                 .message("Lấy danh sách thành công")
                 .result(productService.getProductByCategoryAdmin(pageNo, pageSize, sortBy, sortDir, categoryId))
                 .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<Page<ProductResponse>> searchProducts(
+            @RequestParam(defaultValue = "0") int pageNo, // Trang mặc định là 0
+            @RequestParam(defaultValue = "10") int pageSize, // Kích thước trang mặc định là 10
+            @RequestParam(defaultValue = "id") String sortBy, // Sắp xếp mặc định theo ID
+            @RequestParam(defaultValue = "asc") String sortDir, // Hướng sắp xếp mặc định là tăng dần
+            @RequestParam("productName") String productName
+    ) {
+        try {
+            Page<ProductResponse> listProduct = productService.searchProduct(pageNo, pageSize, sortBy, sortDir,productName);
+            return ApiResponse.<Page<ProductResponse>>builder()
+                    .code(200)
+                    .message("Products retrieved successfully")
+                    .result(listProduct)
+                    .build();
+        } catch (AppException e) {
+            return ApiResponse.<Page<ProductResponse>>builder()
+                    .code(e.getErrorCode().getCode())
+                    .message(e.getMessage())
+                    .build();
+        } catch (Exception e) {
+            return ApiResponse.<Page<ProductResponse>>builder()
+                    .code(500)
+                    .message("An unexpected error occurred: " + e.getMessage())
+                    .build();
+        }
     }
 }

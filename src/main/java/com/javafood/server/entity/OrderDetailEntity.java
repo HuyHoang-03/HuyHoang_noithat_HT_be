@@ -25,7 +25,7 @@ public class OrderDetailEntity {
     OrderEntity order;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "product_id", nullable = false)
     ProductEntity product;
 

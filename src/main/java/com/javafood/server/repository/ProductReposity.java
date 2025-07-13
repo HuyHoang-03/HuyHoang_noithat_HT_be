@@ -18,6 +18,7 @@ public interface ProductReposity extends JpaRepository<ProductEntity, Integer> {
 
     Optional<ProductEntity> findByProductId(int id);
 
+
     @Query("SELECT p FROM Products p LEFT JOIN FETCH p.category LEFT JOIN FETCH p.discount LEFT JOIN FETCH p.images ")
     List<ProductEntity> findAllWithCategory();
 
@@ -55,4 +56,15 @@ public interface ProductReposity extends JpaRepository<ProductEntity, Integer> {
     @Query(value = "SELECT p FROM Products p LEFT JOIN FETCH p.category LEFT JOIN FETCH p.discount LEFT JOIN FETCH p.images",
             countQuery = "SELECT count(p) FROM com.javafood.server.entity.ProductEntity p") // Thêm countQuery để Spring biết cách đếm tổng số phần tử
     Page<ProductEntity> getProductsWithPagination(Pageable pageable);
+
+
+        @Query("SELECT p FROM Products p " +
+                "LEFT JOIN FETCH p.category " +
+                "LEFT JOIN FETCH p.discount " +
+                "LEFT JOIN FETCH p.images " +
+                "WHERE LOWER(p.productName) LIKE LOWER(CONCAT('%', :productName, '%'))")
+        Page<ProductEntity> searchProduct(Pageable pageable, @Param("productName") String productName);
+
+
+
 }

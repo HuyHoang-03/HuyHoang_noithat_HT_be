@@ -24,7 +24,7 @@ public class StockEntity {
     @JoinColumn(name = "stock_transaction_id", nullable = false)
     StockTransactionEntity stockTransaction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "product_id", nullable = false)
     ProductEntity product;
 

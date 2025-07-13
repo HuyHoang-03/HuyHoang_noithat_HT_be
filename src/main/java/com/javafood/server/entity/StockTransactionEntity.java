@@ -20,7 +20,7 @@ public class StockTransactionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer transactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "product_id", nullable = false)
     ProductEntity product;
 
