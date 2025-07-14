@@ -77,6 +77,12 @@ public class UserController {
                 .result(userService.getMyUser())
                 .build();
     }
+//    @GetMapping("/myinfo")
+//    public ApiResponse<UserResponse> getMyInfo() {
+//        return ApiResponse.<UserResponse>builder()
+//                .result(userService.getMyUser())
+//                .build();
+//    }
 
     @GetMapping("/pagination")
     public ApiResponse<Page<UserResponse>> getProductsPagination(
