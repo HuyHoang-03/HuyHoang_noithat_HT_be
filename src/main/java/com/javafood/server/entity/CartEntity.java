@@ -23,7 +23,7 @@ public class CartEntity {
     @JoinColumn(name = "user_id")
     UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     ProductEntity product;
 
