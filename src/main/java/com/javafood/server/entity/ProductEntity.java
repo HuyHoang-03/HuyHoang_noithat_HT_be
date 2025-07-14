@@ -35,6 +35,9 @@ public class ProductEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     List<ImageEntity> images;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<CartEntity> carts; // Thêm mối quan hệ với CartEntity
+
     @NotEmpty
     String productName;
     @NotEmpty

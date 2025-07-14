@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,8 +39,6 @@ public class UserService {
 
     @PreAuthorize(adminRole)
     public UserResponse addUser(UserRequest userRequest) {
-        log.info("Adding user: " + userRequest.getUsername());
-        log.info("Adding user: " + userRepository.existsByUsername(userRequest.getUsername()));
         if(userRepository.existsByUsername(userRequest.getUsername())) { throw new AppException(ErrorCode.EXISTS_DATA); }
 
         String hash_password = passwordEncoder.encode(userRequest.getPassword());
@@ -85,6 +84,38 @@ public class UserService {
         userMapper.updateUser(userEntity, userRequest);
 
         userRepository.save(userEntity);
+        return userMapper.toUserResponse(userEntity);
+    }
+
+    public UserResponse updateInfo(Integer id, UserRequest userRequest) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        // Cập nhật chỉ các trường được cung cấp (không null hoặc không rỗng)
+        if (userRequest.getFirstName() != null && !userRequest.getFirstName().isBlank()) {
+            userEntity.setFirstName(userRequest.getFirstName());
+        }
+        if (userRequest.getLastName() != null && !userRequest.getLastName().isBlank()) {
+            userEntity.setLastName(userRequest.getLastName());
+        }
+        if (userRequest.getEmail() != null && !userRequest.getEmail().isBlank()) {
+            userEntity.setEmail(userRequest.getEmail());
+        }
+        if (userRequest.getPhone() != null && !userRequest.getPhone().isBlank()) {
+            userEntity.setPhone(userRequest.getPhone());
+        }
+        if (userRequest.getAddress() != null && !userRequest.getAddress().isBlank()) {
+            userEntity.setAddress(userRequest.getAddress());
+        }
+        if (userRequest.getUsername() != null && !userRequest.getUsername().isBlank()) {
+            userEntity.setUsername(userRequest.getUsername());
+        }
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isBlank()) {
+            userEntity.setPassword(userRequest.getPassword());
+        }
+
+        // Lưu thay đổi vào cơ sở dữ liệu
+        userRepository.save(userEntity);
+
         return userMapper.toUserResponse(userEntity);
     }
 

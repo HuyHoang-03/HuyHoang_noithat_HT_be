@@ -18,4 +18,9 @@ public interface ImageRepository extends JpaRepository<ImageEntity, Integer> {
     void deleteByProductProductId(@Param("productId") Integer productId);
 
     List<ImageEntity> findByProductProductId(Integer productId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Images i WHERE i.product.productId = :productId")
+    void deleteByProductId(@Param("productId") Long productId);
 }

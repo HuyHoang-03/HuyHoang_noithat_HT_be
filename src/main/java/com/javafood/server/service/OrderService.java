@@ -195,7 +195,7 @@ public class OrderService {
     public List<OrderResponse> getOrdersByUserId(Integer userId) {
         List<OrderEntity> orders = orderRepository.findByUserId(userId);
         if (orders.isEmpty()) {
-            throw new RuntimeException("Không tìm thấy đơn hàng cho người dùng này");
+            return Collections.emptyList();
         }
         return orders.stream().map(order -> {
             OrderResponse response = orderMapper.toOrderResponse(order);

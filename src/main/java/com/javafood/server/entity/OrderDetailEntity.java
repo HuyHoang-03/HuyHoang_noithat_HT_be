@@ -20,7 +20,7 @@ public class OrderDetailEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Integer orderDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "order_id", nullable = false)
     OrderEntity order;
 

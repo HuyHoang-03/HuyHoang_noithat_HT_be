@@ -1,6 +1,7 @@
 package com.javafood.server.service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.javafood.server.repository.*;
 import org.springframework.beans.factory.annotation.Value;
 import com.javafood.server.dto.request.ProductRequest;
 import com.javafood.server.dto.response.ProductResponse;
@@ -11,10 +12,6 @@ import com.javafood.server.entity.ProductEntity;
 import com.javafood.server.exception.AppException;
 import com.javafood.server.exception.ErrorCode;
 import com.javafood.server.mapper.ProductMapper;
-import com.javafood.server.repository.CategoryRepository;
-import com.javafood.server.repository.DiscountRepository;
-import com.javafood.server.repository.ImageRepository;
-import com.javafood.server.repository.ProductReposity;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +55,9 @@ public class ProductService {
 
     @Autowired
     ImageUploadService imageUploadService;
+
+    @Autowired
+    OrderDetailRepository orderDetailRepository;
 
     @Autowired
     Cloudinary cloudinary;
@@ -296,6 +296,8 @@ public class ProductService {
     public void deleteProduct(Integer productId) {
         boolean isExist = productRepository.existsByProductId(productId);
         if(!isExist) throw new AppException(ErrorCode.NOT_EXISTS_DATA);
+        orderDetailRepository.deleteByProductId(Long.valueOf(productId));
+        imageRepo.deleteByProductProductId(productId);
         productRepository.deleteById(productId);
     }
 
